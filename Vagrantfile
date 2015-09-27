@@ -14,7 +14,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Should be based on an artifactory box
   # config.vm.box_url = "http://domain.com/path/to/above.box"
-  #config.vm.synced_folder "../../install-bucket", "/install-bucket"
+  # We assume the software will be downloaded to ~/Downloads
+  config.vm.synced_folder "~/Downloads", "/install-bucket"
 
   # Expose oracle
   #config.vm.network :forwarded_port, guest: 3128, host: 3128
@@ -31,22 +32,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ['modifyvm', :id, "--clipboard", "bidirectional"]
   end
 
-  # if Vagrant.has_plugin?("vagrant-proxyconf")
-  #      config.proxy.http        = "http://10.0.2.2:3128"
-  #      config.proxy.https       = "http://10.0.2.2:3128"
-  #      config.apt_proxy.http    = "http://10.0.2.2:3128"
-  #      config.apt_proxy.https   = "http://10.0.2.2:3128"
-  #      config.proxy.no_proxy    = "localhost,127.0.0.1,/var/run/docker.sock"
-  # end
-  #config.vm.provision "shell", :inline => <<-SHELL
-    #apt-get update
-    #wget -O - https://raw.githubusercontent.com/petems/puppet-install-shell/master/install_puppet.sh | sudo sh
-    #apt-get upgrade -y
-  #SHELL
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+       config.proxy.http        = "http://10.0.2.2:3128"
+       config.proxy.https       = "http://10.0.2.2:3128"
+       config.apt_proxy.http    = "http://10.0.2.2:3128"
+       config.apt_proxy.https   = "http://10.0.2.2:3128"
+       config.proxy.no_proxy    = "localhost,127.0.0.1,/var/run/docker.sock"
+  end
 
-  config.vm.provision "puppet" do |puppet|
-    puppet.manifests_path = "puppet/manifests"
-    #puppet.module_path = "puppet/modules"
+  config.vm.provision "shell", :inline => <<-SHELL
+    wget -O - https://raw.githubusercontent.com/petems/puppet-install-shell/master/install_puppet.sh | sudo sh
+    apt-get upgrade -y
+  SHELL
+
+  # config.vm.provision "puppet" do |puppet|
+  #   puppet.manifests_path = "puppet/manifests"
+  #   #puppet.module_path = "puppet/modules"
+  # end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "provisioning/ansible/playbook.yml"
   end
 
 end
