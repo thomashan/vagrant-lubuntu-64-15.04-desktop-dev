@@ -1,6 +1,26 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require "getoptlong"
+
+opts = GetoptLong.new(
+  [ '--proxy', GetoptLong::OPTIONAL_ARGUMENT ]
+)
+
+useProxy = false
+
+opts.each do |opt, arg|
+  case opt
+    when '--proxy'
+      if(arg == "true")
+        useProxy = true
+      else
+        useProxy = false
+      end
+  end
+end
+
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
   
@@ -32,12 +52,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ['modifyvm', :id, "--clipboard", "bidirectional"]
   end
 
-  if Vagrant.has_plugin?("vagrant-proxyconf")
-       config.proxy.http        = "http://10.0.2.2:3128"
-       config.proxy.https       = "http://10.0.2.2:3128"
-       config.apt_proxy.http    = "http://10.0.2.2:3128"
-       config.apt_proxy.https   = "http://10.0.2.2:3128"
-       config.proxy.no_proxy    = "localhost,127.0.0.1,/var/run/docker.sock"
+  if Vagrant.has_plugin?("vagrant-proxyconf") && useProxy
+    config.proxy.http        = "http://10.0.2.2:3128"
+    config.proxy.https       = "http://10.0.2.2:3128"
+    config.apt_proxy.http    = "http://10.0.2.2:3128"
+    config.apt_proxy.https   = "http://10.0.2.2:3128"
+    config.proxy.no_proxy    = "localhost,127.0.0.1,/var/run/docker.sock"
+  else
+    config.proxy.http       = ""
+    config.proxy.https      = ""
+    config.apt_proxy.http   = ""
+    config.apt_proxy.https  = ""
+    config.proxy.no_proxy   = ""
   end
 
   config.vm.provision "shell", :inline => <<-SHELL
