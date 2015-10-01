@@ -18,15 +18,15 @@ All the required software will be downloaded to guest@:/install-buck.
 
 
 ## Prerequisites
-* cntlm is running on the host box
 * Vagrant is installed
+* cntlm is running on the host box if you're using the proxy
 
 
 ## Installation for the first time
-1. >vagrant plugin install vagrant-proxyconf
-2. >vagrant up
+1. > vagrant plugin install vagrant-proxyconf
+2. > vagrant up
 
 ## Reload vagrant image after config change
-1. >vagrant up
-1. >vagrant provision
-2. >vagrant reload
+1. > vagrant up
+1. > vagrant provision
+2. > vagrant reload

@@ -2,7 +2,9 @@
 - hosts: all
   tasks:
 
-  - apt: upgrade=dist update_cache=yes
+  - apt: upgrade=dist update_cache=yes force=yes dpkg_options="force-confdef,force-confold"
+    environment:
+      DEBIAN_FRONTEND: noninteractive
     sudo: yes
 
   #  # dpkg -L linux-image*

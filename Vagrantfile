@@ -28,7 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.boot_timeout = 600
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "mast3rof0/lubuntu64"
+  config.vm.box = "thomashan/lubuntu-64"
   #config.puppet_install.puppet_version = :latest
   # config.vm.network "public_network"
 
