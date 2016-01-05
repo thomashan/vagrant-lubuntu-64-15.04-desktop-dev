@@ -24,7 +24,7 @@ All the required software will be downloaded to guest@:/install-buck.
 
 ## Installation for the first time
 1. > vagrant plugin install vagrant-proxyconf
-2. > vagrant up
+2. > vagrant up [--proxy=true]
 
 ## Reload vagrant image after config change
 1. > vagrant up
